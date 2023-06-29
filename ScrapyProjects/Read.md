@@ -1,8 +1,8 @@
 Creating a Scrapy Project
 
-1. Create Directory {ProjectName}
+1. Create Directory {ProjectName} \n
 
-2. Push scrapy.cfg file on the same level with such text:
+2. Push scrapy.cfg file on the same level with such text: \n
     [settings]
     {ProjectName} = {ProjectName}.settings
 
