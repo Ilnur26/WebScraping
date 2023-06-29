@@ -8,9 +8,11 @@ class ScratchQuotes(scrapy.Spider):
         for div in response.css('.quote'):
              quote = div.css('.text::text').get()
              author = div.css('.author::text').get()
+             tags = div.css('.tag::text').getall()
              yield {
                  'quote': quote.replace('“', '').replace('”', ''),
-                 'author': author
+                 'author': author,
+                 'tags': tags
              }
 
         nextPageUrl = response.css('li.next a::attr(href)').get()
