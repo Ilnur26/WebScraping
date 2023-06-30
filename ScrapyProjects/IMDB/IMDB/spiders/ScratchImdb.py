@@ -29,11 +29,12 @@ class ScratchImdb(scrapy.Spider):
             else:
                 place, name = None, None
 
-            dic = {'movieName': name, 'B': 'ball'}
+            dic = {'movieName': name, 'place': place}
 
             yield response.follow(url, callback=self.parseInfo, meta=dic)
 
-            break
+            # break
+
             # yield {
             #     # 'tag': tag
             #     'place': place,
@@ -54,7 +55,17 @@ class ScratchImdb(scrapy.Spider):
 
     def parseInfo(self, response):
         # print(response.url)
-        txt = response.css('.ipc-inline-list.ipc-inline-list--show-dividers.sc-afe43def-4.kdXikI.baseAlt li:last-child::text').get()
-        print('\n\n\n\n')
-        print(txt)
-        # print(response.meta['movieName'])
+        duration = response.css('.ipc-inline-list.ipc-inline-list--show-dividers.sc-afe43def-4.kdXikI.baseAlt li:last-child::text').get()
+        genre = response.css('div[data-testid="genres"] div a span::text').getall()
+        name = response.meta['movieName']
+        place = response.meta['place']
+        yield {
+            'NN': place,
+            'MovieName': name,
+            'Duration': duration,
+            'Genre': genre
+        }
+        # print('\n\n\n\n')
+        # print(txt)
+        # print('\n\n\n\n')
+        # print(genre)
