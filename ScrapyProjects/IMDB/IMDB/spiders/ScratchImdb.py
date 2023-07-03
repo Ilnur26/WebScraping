@@ -22,6 +22,7 @@ class ScratchImdb(scrapy.Spider):
             # href = tag.css('a::attr(href)').get()
             a = tag.css('a::attr(href)').get()
             movie = tag.css('h3::text').get()
+            # year = tag.css('span.sc-14dd939d-6.kHVqMR.cli-title-metadata-item:first-child::text').get()
             url = 'https://www.imdb.com/' + a
             if '.' in movie:
                 place = movie.split('.', 1)[0]
@@ -29,7 +30,10 @@ class ScratchImdb(scrapy.Spider):
             else:
                 place, name = None, None
 
-            dic = {'movieName': name, 'place': place}
+            dic = {'movieName': name,
+                   'place': place
+                   # , 'year': year
+                   }
 
             yield response.follow(url, callback=self.parseInfo, meta=dic)
 
@@ -59,11 +63,14 @@ class ScratchImdb(scrapy.Spider):
         genre = response.css('div[data-testid="genres"] div a span::text').getall()
         name = response.meta['movieName']
         place = response.meta['place']
+        # year = response.meta['year']
         yield {
             'NN': place,
             'MovieName': name,
             'Duration': duration,
             'Genre': genre
+            # ,
+            # 'Year': year
         }
         # print('\n\n\n\n')
         # print(txt)
