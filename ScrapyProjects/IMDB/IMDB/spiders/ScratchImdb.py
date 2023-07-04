@@ -35,7 +35,7 @@ class ScratchImdb(scrapy.Spider):
                    # , 'year': year
                    }
 
-            yield response.follow(url, callback=self.parseInfo, meta=dic)
+            yield response.follow(url, callback=self.parseInfo, meta=dic, dont_filter=True)
 
             # break
 
@@ -61,6 +61,8 @@ class ScratchImdb(scrapy.Spider):
         # print(response.url)
         duration = response.css('.ipc-inline-list.ipc-inline-list--show-dividers.sc-afe43def-4.kdXikI.baseAlt li:last-child::text').get()
         genre = response.css('div[data-testid="genres"] div a span::text').getall()
+        director = response.css('span:contains("Director") + div ul li a::text').get()
+        directorUrl = response.css('span:contains("Director") + div ul li a::attr(href)').get()
         name = response.meta['movieName']
         place = response.meta['place']
         # year = response.meta['year']
@@ -68,10 +70,12 @@ class ScratchImdb(scrapy.Spider):
             'NN': place,
             'MovieName': name,
             'Duration': duration,
-            'Genre': genre
+            'Genre': genre,
+            'Director': director
             # ,
             # 'Year': year
         }
+        top4Movies = response.css('.ipc-primary-image-list-card__content-top a::text').getall()
         # print('\n\n\n\n')
         # print(txt)
         # print('\n\n\n\n')
