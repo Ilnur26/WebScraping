@@ -9,16 +9,20 @@ class ScratchImdb(scrapy.Spider):
         cssSel = 'a[href="https://www.hugoboss.com/men-clothing/"] + div .col-xl-offset-1 a::attr(href)'
         for url in response.css(cssSel).getall():
             yield Request(url, callback=self.parseProducts)
-            break
 
 
     def parseProducts(self, response):
         print(response.url)
         cssSel = '.product-tile-plp__gallery a::attr("href")'
         for prodUrl in response.css(cssSel).getall():
-            print(prodUrl)
+            # print(prodUrl)
             yield response.follow(prodUrl, callback=self.parseProduct)
-            break
+
+        nextPage = response.css('.button.button--pagingbar.pagingbar__next.font--button.button.button--pagingbar.pagingbar__next.font--button::attr("href")').get()
+        if nextPage:
+            yield Request(nextPage, callback=self.parseProducts)
+        # print(NextPage)
+
 
 
     def parseProduct(self, response):
@@ -35,5 +39,4 @@ class ScratchImdb(scrapy.Spider):
             'Colors': colors,
             'Pic Urls': picsUrl,
             'Care Instractions': careIns
-
         }
